@@ -1,0 +1,23 @@
+kind = "mobile"
+previewPath = "/"
+title = "BluePMS Mobile"
+version = "1.0.0"
+id = "artifacts/bluepms-mobile"
+router = "expo-domain"
+
+[[services]]
+name = "expo"
+ensurePreviewReachable = "/status"
+paths = [ "/" ]
+localPort = 20724
+
+[services.development]
+run = "pnpm --filter @workspace/bluepms-mobile run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/bluepms-mobile", "run", "build" ]
+run = [ "pnpm", "--filter", "@workspace/bluepms-mobile", "run", "serve" ]
+
+[services.env]
+PORT = "20724"
+BASE_PATH = "/"
