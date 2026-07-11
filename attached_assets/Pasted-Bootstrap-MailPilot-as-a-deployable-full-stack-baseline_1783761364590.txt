@@ -1,0 +1,120 @@
+Bootstrap MailPilot as a deployable full-stack baseline (backend API, web app, Chrome extension, infra/docs)
+#1
+Closed
+QizarBilal with Copilot
+wants to merge 2 commits into
+main
+from
+copilot/build-mailpilot-project
++9,411
+Lines changed: 9411 additions & 0 deletions
+Conversation1 (1)
+Commits2 (2)
+Checks0 (0)
+Files changed104 (104)
+Conversation
+Copilot AI
+commented
+10 minutes ago
+MailPilot required a production-ready implementation spanning Spring Boot backend, React web client, and MV3 Chrome extension with a shared AI engine. This PR establishes that baseline with deployable infrastructure, secure API foundations, and end-to-end channel integration points.
+
+Backend platform (Spring Boot)
+
+Added layered backend structure: controllers, services, repositories, DTOs, entities, config, and global exception handling.
+Implemented auth flows (register/login/refresh/logout), user profile endpoints, dashboard stats, and RBAC (USER/ADMIN).
+Added Gemini integration path via a reusable PromptService and email-processing endpoint with operation-based prompt orchestration.
+Added persistence model + Flyway migrations for users, refresh tokens, prompt/email history, templates, preferences, feedback, usage, and audit logs.
+Security and API hardening
+
+Added JWT filter-based auth, BCrypt password handling, CORS config, CSRF strategy for API/web interaction, and request rate limiting.
+Added OpenAPI/Swagger support for versioned REST APIs under /api/v1.
+Added workflow-level GitHub Actions token permissions hardening.
+Web app (React + Vite + TypeScript + Tailwind)
+
+Added routed app shell and core pages (landing, auth, dashboard, history, templates, profile, settings, analytics).
+Added auth context + Axios client with bearer token propagation.
+Added AI composer UI wired to backend email processing.
+Chrome extension (Manifest V3)
+
+Added popup + options UIs, background service worker, content script injection hook for Gmail, and message passing to backend.
+Added local offline queue behavior for deferred processing and extension storage integration.
+Configured multi-entry build for popup/options assets.
+Deployment, CI, and docs
+
+Added Dockerfiles (backend/frontend), root docker-compose.yml, env template, and CI workflow.
+Added high-signal docs set: README, architecture, installation, deployment, developer guide, troubleshooting, and roadmap.
+Example backend security/API configuration introduced:
+
+http.csrf(csrf -> csrf
+        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+        .ignoringRequestMatchers("/api/v1/auth/**", "/v3/api-docs/**", "/swagger-ui/**", "/actuator/**"))
+    .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+    .authorizeHttpRequests(auth -> auth
+        .requestMatchers("/api/v1/auth/**").permitAll()
+        .anyRequest().authenticated())
+    .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+Copilot uses AI. Check for mistakes.
+Copilot AI added 2 commits 22 minutes ago
+feat: scaffold full-stack mailpilot foundation
+a1e2f11
+fix: stabilize builds and harden workflow security
+23e5041
+ Copilot AI assigned Copilot and QizarBilal 10 minutes ago
+Copilot created this pull request from a session on behalf of QizarBilal 10 minutes ago
+@QizarBilal
+QizarBilal
+commented
+8 minutes ago
+Owner
+Initial full-stack foundation for MailPilot is now in place.
+
+This PR bootstraps the project with a production-ready architecture, including:
+
+Spring Boot backend with JWT authentication, RBAC, Flyway migrations, and Gemini AI integration foundation.
+React + Vite web application with authentication, dashboard, AI composer, and core application pages.
+Chrome Extension (Manifest V3) with popup, options page, background service worker, Gmail integration hooks, and offline queue support.
+Docker, Docker Compose, GitHub Actions, environment templates, and comprehensive project documentation.
+
+This is a baseline scaffolding PR intended to establish the project's architecture and deployment setup. Subsequent PRs will focus on implementing complete AI workflows, business logic, additional integrations, testing, and UI/UX enhancements.
+
+Feedback and suggestions are welcome!
+
+@QizarBilal QizarBilal closed this 8 minutes ago
+Merge info
+Closed with unmerged commits
+This pull request is closed, but the copilot/build-mailpilot-project branch has unmerged commits.
+
+@QizarBilal
+
+
+Add a comment
+Comment
+ 
+Add your comment here...
+Remember, contributions to this repository should follow our GitHub Community Guidelines.
+ ProTip! Add .patch or .diff to the end of URLs for Git’s plaintext views.
+Reviewers
+Copilot code review
+Copilot
+Assignees
+@QizarBilal
+QizarBilal
+Copilot code review
+Copilot
+Labels
+None yet
+Projects
+None yet
+Milestone
+No milestone
+Development
+Successfully merging this pull request may close these issues.
+
+None yet
+
+
+Notifications
+Customize
+You’re receiving notifications because you modified the open/close state.
+2 participants
+@QizarBilal
